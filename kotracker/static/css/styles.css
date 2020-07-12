@@ -1,0 +1,46 @@
+@font-face {
+  font-family: "Tecmo";
+  src: url("../fonts/GF-TecmoSet2.TTF");
+}
+body {
+    background-color: #FF00FF;
+    font-family: "Tecmo";
+    color: antiquewhite;
+    text-shadow: 
+      5px  5px #151515,
+      2px  2px #151515,
+      2px  0px #151515,
+      2px -2px #151515,
+      0px  2px #151515,
+      0px -2px #151515,
+      -2px  2px #151515,
+      -2px  0px #151515,
+      -2px -2px #151515;
+}
+h3 {
+  font-size: 30px;
+  text-align: center;
+  color: yellow;
+}
+th {
+  font-size: 24px;
+  text-align: left;
+  padding-left: 30px;
+}
+td {
+  font-size: 20px;
+  text-align: left;
+  padding-left: 30px;
+}
+.first {
+  color: rgb(193, 193, 255);
+  font-size: 23px;
+}
+.second {
+  color: rgb(255, 193, 193);
+  font-size: 22px;
+}
+.third {
+  color: rgb(255, 255, 255);
+  font-size: 21px;
+}
