@@ -18,7 +18,7 @@ from django.urls import path
 from tracker.views import *
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('rockyirs/', admin.site.urls),
     path('overview/<tournament>', overview_tournament, name='overview'),
     path('view_round/<tournament>/<number>/', view_round, name='view_round'),
     path('edit_round/<tournament>/<number>/', edit_round, name='edit_round'),
