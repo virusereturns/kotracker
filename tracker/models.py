@@ -22,15 +22,16 @@ class Racer(models.Model):
     """
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     name = models.CharField(max_length=150)
-    pb = models.TimeField(null=True, blank=True)
+    pb = models.DurationField(null=True, blank=True)
     eliminated = models.BooleanField(default=False)
+    elimination_round = models.PositiveSmallIntegerField(null=True, blank=True)
     dropped = models.BooleanField(default=False)
     position = models.PositiveSmallIntegerField(null=True, blank=True)
-    best_time_in_race = models.TimeField(null=True, blank=True)
-    average_time_in_race = models.TimeField(null=True, blank=True)
+    best_time_in_race = models.DurationField(null=True, blank=True)
+    average_time_in_race = models.DurationField(null=True, blank=True)
 
     def __str__(self):
-        return "{} on {}".format(self.name, self.tournament)
+        return self.name
 
     class Meta:
         pass
@@ -50,7 +51,7 @@ class Round(models.Model):
 class RacerRound(models.Model):
     racer = models.ForeignKey(Racer, on_delete=models.CASCADE)
     round_number = models.ForeignKey(Round, on_delete=models.CASCADE)
-    time = models.TimeField(null=True, blank=True)
+    time = models.DurationField(null=True, blank=True)
     dnf = models.BooleanField(default=False)
     eliminated = models.BooleanField(default=False)
     dropped = models.BooleanField(default=False)

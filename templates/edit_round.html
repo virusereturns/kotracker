@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load duration %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <table>
+        <h3>EDITING ROUND {{round.number}} FOR {{tournament.name}}</h3>
+        <tr>
+            <th>#</th><th>Racer</th><th>Time</th><th>Eliminate</th><th>Drop</th>
+        </tr>
+        {% for racer_round in racer_rounds %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{racer_round.racer}}</td>
+            {% if racer_round.racer.eliminated %}
+            <td>Eliminated in round {{racer_round.racer.elimination_round}}</td>
+            <td>N/A</td><td>N/A</td>
+            {% elif racer_round.racer.dropped %}
+            <td>Dropped in round {{racer_round.racer.elimination_round}}</td>
+            <td>N/A</td><td>N/A</td>
+            {% else %}
+            <td><input type="text" value="{{racer_round.time|duration|default_if_none:''}}" name="time-{{racer_round.id}}"/></td>
+            <td><input type="checkbox" value="" name="e-{{racer_round.racer.id}}-{{round.number}}-{{tournament.id}}"/></td>
+            <td><input type="checkbox" value="" name="d-{{racer_round.racer.id}}-{{round.number}}-{{tournament.id}}"/></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+    <input type='submit' value='Save'>
+    <a href="/create_next_round/{{tournament.id}}/">Create next round</a>
+</form>
+{% endblock %}
