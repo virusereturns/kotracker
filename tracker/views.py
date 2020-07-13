@@ -26,7 +26,12 @@ def edit_round(request, tournament, number):
         racer__eliminated=False).order_by('racer__eliminated', 'time')
     eliminated_racers = Racer.objects.filter(tournament=tournament_object, eliminated=True)
     if int(number) > 1:
-        racer_rounds = sorted(racer_rounds, key=lambda a: a.get_last_round_time())
+        sort = True
+        for racer_round in racer_rounds:
+            if racer_round.time:
+                sort = False
+                break
+        racer_rounds = sorted(racer_rounds, key=lambda a: a.get_last_round_time()) if sort else racer_rounds
     if request.POST:
         # Process eliminates
         for name, value in request.POST.items():
