@@ -12,7 +12,7 @@ def view_round(request, tournament, number):
     tournament_object = get_object_or_404(Tournament, pk=tournament)
     round_object = get_object_or_404(Round, tournament=tournament, number=number)
     racer_rounds = RacerRound.objects.filter(
-        racer__tournament=tournament_object, round_number=round_object).order_by('time', '-racer__elimination_round')
+        racer__tournament=tournament_object, round_number=round_object).order_by('-racer__elimination_round', 'time')
     # return HttpResponse("round {} tournament {}".format(round_object, tournament_object))
     return render(request, 'view_round.html', {
         'racer_rounds': racer_rounds, 'round': round_object, 'tournament': tournament_object})
