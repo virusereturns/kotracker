@@ -4,7 +4,10 @@
 <div style="float:left">
 <form method="post">
     {% csrf_token %}
-    <h3>EDITING ROUND {{round.number}} FOR {{tournament.name}} <a target="_blank" href="/view_round/{{ tournament.id}}/{{round.number}}">(Copy this URL in OBS)</a></h3>
+    <h3>EDITING ROUND {{round.number}} FOR {{tournament.name}}
+        <a target="_blank" href="/view_round/{{ tournament.id}}/{{round.number}}">(Copy this URL in OBS)</a>
+        <a target="_blank" href="/rockyirs/tracker/tournament/{{tournament.id}}/">(Edit tournament)</a>
+    </h3>
     <p>Input times in MM:ss format</p> 
     <table>
         <tr>
@@ -36,7 +39,7 @@
         <h1>Eliminated racers</h1>
         <ul>
             {% for racer in eliminated_racers %}
-            <li>{{racer.name}} - Eliminated in round {{racer.elimination_round}}</li>
+            <li>{{racer.name}} - {% if racer.eliminated %}Eliminated{%else%}Dropped{%endif%} in round {{racer.elimination_round}}</li>
             {% endfor %}
         </ul>
     </div>

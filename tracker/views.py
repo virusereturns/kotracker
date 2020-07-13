@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404, reverse
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 # from django.db.models import Max
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from .models import *
 
 # Create your views here.
@@ -11,7 +12,7 @@ def view_round(request, tournament, number):
     tournament_object = get_object_or_404(Tournament, pk=tournament)
     round_object = get_object_or_404(Round, tournament=tournament, number=number)
     racer_rounds = RacerRound.objects.filter(
-        racer__tournament=tournament_object, round_number=round_object).order_by('racer__eliminated', 'time')
+        racer__tournament=tournament_object, round_number=round_object).order_by('time', '-racer__elimination_round')
     # return HttpResponse("round {} tournament {}".format(round_object, tournament_object))
     return render(request, 'view_round.html', {
         'racer_rounds': racer_rounds, 'round': round_object, 'tournament': tournament_object})
@@ -23,8 +24,9 @@ def edit_round(request, tournament, number):
     round_object = get_object_or_404(Round, tournament=tournament, number=number)
     racer_rounds = RacerRound.objects.filter(
         racer__tournament=tournament_object, round_number=round_object,
-        racer__eliminated=False).order_by('racer__eliminated', 'time')
-    eliminated_racers = Racer.objects.filter(tournament=tournament_object, eliminated=True)
+        racer__eliminated=False, racer__dropped=False).order_by('time')
+    eliminated_racers = Racer.objects.filter(
+        Q(eliminated=True) | Q(dropped=True), tournament=tournament_object).order_by('-elimination_round')
     if int(number) > 1:
         sort = True
         for racer_round in racer_rounds:
