@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load duration %}
+{% block content %}
+    <table>
+        <h3>{{tournament.name}}</h3>
+        <tr>
+            <th>#</th><th>Racer</th><th>PB</th>
+        </tr>
+        {% for racer in racers %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{racer.name}}</td>
+            <td>{{racer.pb|duration|default_if_none:'???'}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

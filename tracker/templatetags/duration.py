@@ -1,10 +1,13 @@
 from django import template
+from datetime import timedelta
 
 register = template.Library()
 
 
 @register.filter
 def duration(td):
+    if td == timedelta(1):
+        return '-'
     if not td:
         return ''
     minutes, seconds = divmod(td.seconds + td.days * 86400, 60)

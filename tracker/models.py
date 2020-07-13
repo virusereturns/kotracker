@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import timedelta
 
 
 class Tournament(models.Model):
@@ -14,6 +15,9 @@ class Tournament(models.Model):
 
     class Meta:
         pass
+
+    def current_round(self):
+        return self.round_set.count()
 
 
 class Racer(models.Model):
@@ -62,3 +66,6 @@ class RacerRound(models.Model):
 
     class Meta:
         pass
+
+    def get_last_round_time(self):
+        return RacerRound.objects.get(racer=self.racer, round_number__number=self.round_number.number - 1).time or '-'

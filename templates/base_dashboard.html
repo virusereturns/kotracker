@@ -1,0 +1,38 @@
+{% load static %}
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>KONOT Tracker</title>
+        <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
+        <link href="{% static 'css/base.css' %}" type="text/css" rel="stylesheet" />
+        {% block js %}{% endblock %}
+        {% block css %}{% endblock %}
+        {% block extrastyle %}
+        {{ block.super }}
+        {% endblock %}
+    </head>
+    <body{% block bodyclass %}{% endblock %}>
+    <div id="container">
+        <div id="header">
+            <div id="branding">
+                <h1 id="site-name">
+                    KONOT TRACKER
+                </h1>
+            </div>
+            <div id="user-tools">
+                <strong>{{request.user}}</strong>.
+                <a href="/">I'm lost</a> /
+                <a href="/rockyirs/">Admin</a> /
+                <a href="/rockyirs/password_change/">Change Password</a> /
+                <a href="/rockyirs/logout/">Logout</a>
+            </div>
+        </div>
+        <div id="content">
+            {# <h1>{% block pagetitle %}Suscripciones{% endblock %}</h1> #}
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    </body>
+    {% block footer %}{% endblock %}
+</html>

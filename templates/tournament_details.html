@@ -1,0 +1,25 @@
+{% extends 'base_dashboard.html' %}
+{% load duration %}
+{% block content %}
+    <table>
+    <thead>
+        <tr>
+            <th>#</th><th>Winner</th><th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for round in rounds %}
+        <tr>
+            <td>{{round.number}}</td>
+            <td>{{round.get_winner}}</td>
+            <td>
+                <a href="/edit_round/{{tournament.id}}/{{round.number}}">(Edit round)</a>
+                <a href="/view_round/{{tournament.id}}/{{round.number}}/">(View round: OBS URL)</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    <br><br>
+    <a href="/create_next_round/{{tournament.id}}">(Create next round)</a>
+{% endblock %}

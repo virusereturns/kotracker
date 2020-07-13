@@ -1,0 +1,27 @@
+{% extends 'base_dashboard.html' %}
+{% load duration %}
+{% block content %}
+    <table>
+    <thead>
+        <tr>
+            <th>Name</th><th>Current round</th><th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for tournament in tournaments %}
+        <tr>
+            <td>{{tournament.name}}</td>
+            <td>{{tournament.current_round}}</td>
+            <td>
+                <a href="/tournament_details/{{tournament.id}}">(Details/Rounds)</a>
+                <a href="/create_next_round/{{tournament.id}}">(Create next round)</a>
+                <a href="/edit_round/{{tournament.id}}/{{tournament.current_round}}/">(Jump to last round)</a>
+                <a href="/overview/{{tournament.id}}">(Overview URL)</a>
+                <a href="/end_stats/{{tournament.id}}">(End stats URL)</a>
+            </td>
+        </tr>
+
+    {% endfor %}
+    </tbody>
+    </table>
+{% endblock %}

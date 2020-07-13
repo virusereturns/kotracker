@@ -3,7 +3,7 @@
   src: url("../fonts/GF-TecmoSet2.TTF");
 }
 body {
-    background-color: #FF00FF;
+    # background-color: #FF00FF;
     font-family: "Tecmo";
     color: antiquewhite;
     text-shadow: 
@@ -28,19 +28,26 @@ th {
   padding-left: 30px;
 }
 td {
-  font-size: 20px;
   text-align: left;
   padding-left: 30px;
 }
+tr {
+  font-size: 20px;
+}
 .first {
   color: rgb(193, 193, 255);
-  font-size: 23px;
+  font-size: 26px;
 }
 .second {
   color: rgb(255, 193, 193);
-  font-size: 22px;
+  font-size: 24px;
 }
 .third {
   color: rgb(255, 255, 255);
-  font-size: 21px;
+  font-size: 22px;
 }
+.dropped {
+  color: rgb(255, 0, 0);
+  font-size: 20px;
+}
+

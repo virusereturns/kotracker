@@ -22,7 +22,11 @@ def edit_round(request, tournament, number):
     tournament_object = get_object_or_404(Tournament, pk=tournament)
     round_object = get_object_or_404(Round, tournament=tournament, number=number)
     racer_rounds = RacerRound.objects.filter(
-        racer__tournament=tournament_object, round_number=round_object).order_by('racer__eliminated', 'time')
+        racer__tournament=tournament_object, round_number=round_object,
+        racer__eliminated=False).order_by('racer__eliminated', 'time')
+    eliminated_racers = Racer.objects.filter(tournament=tournament_object, eliminated=True)
+    if int(number) > 1:
+        racer_rounds = sorted(racer_rounds, key=lambda a: a.get_last_round_time())
     if request.POST:
         # Process eliminates
         for name, value in request.POST.items():
@@ -53,12 +57,18 @@ def edit_round(request, tournament, number):
         return HttpResponseRedirect(reverse('edit_round', kwargs={
             'tournament': tournament, 'number': number}))
 
+    rounds = tournament_object.round_set.all()
+
     return render(request, 'edit_round.html', {
-        'racer_rounds': racer_rounds, 'round': round_object, 'tournament': tournament_object})
+        'racer_rounds': racer_rounds, 'round': round_object, 'tournament': tournament_object,
+        'eliminated_racers': eliminated_racers, 'round_list': rounds})
 
 
 def overview_tournament(request, tournament):
-    return HttpResponse("tournament {}".format(tournament))
+    tournament_object = get_object_or_404(Tournament, pk=tournament)
+    racers = Racer.objects.filter(tournament=tournament_object).order_by('pb')
+    return render(request, 'overview_tournament.html', {
+        'racers': racers, 'tournament': tournament_object})
 
 
 @login_required
@@ -77,3 +87,17 @@ def create_next_round(request, tournament):
             round_number=round)
     return HttpResponseRedirect(reverse(
         'edit_round', kwargs={'tournament': tournament.id, 'number': round.number}))
+
+
+@login_required
+def tournament_menu(request):
+    tournaments = Tournament.objects.all()
+    return render(request, 'tournament_menu.html', {'tournaments': tournaments})
+
+
+@login_required
+def tournament_details(request, tournament):
+    tournament_object = get_object_or_404(Tournament, pk=tournament)
+    rounds = tournament_object.round_set.all()
+    return render(request, 'tournament_details.html', {
+        'tournament': tournament_object, 'rounds': rounds})

@@ -1,32 +1,58 @@
-{% extends 'base.html' %}
+{% extends 'base_dashboard.html' %}
 {% load duration %}
 {% block content %}
+<div style="float:left">
 <form method="post">
     {% csrf_token %}
+    <h3>EDITING ROUND {{round.number}} FOR {{tournament.name}} <a target="_blank" href="/view_round/{{ tournament.id}}/{{round.number}}">(Copy this URL in OBS)</a></h3>
+    <p>Input times in MM:ss format</p> 
     <table>
-        <h3>EDITING ROUND {{round.number}} FOR {{tournament.name}}</h3>
         <tr>
-            <th>#</th><th>Racer</th><th>Time</th><th>Eliminate</th><th>Drop</th>
+            <th>#</th><th>Racer</th><th>Previous Round</th><th>Time</th><th>Eliminate</th><th>Drop</th>
         </tr>
         {% for racer_round in racer_rounds %}
         <tr>
             <td>{{forloop.counter}}</td>
             <td>{{racer_round.racer}}</td>
-            {% if racer_round.racer.eliminated %}
-            <td>Eliminated in round {{racer_round.racer.elimination_round}}</td>
-            <td>N/A</td><td>N/A</td>
-            {% elif racer_round.racer.dropped %}
-            <td>Dropped in round {{racer_round.racer.elimination_round}}</td>
-            <td>N/A</td><td>N/A</td>
+            {% if round.number == 1 %}
+            <td>-</td>
             {% else %}
+            <td>{{racer_round.get_last_round_time}}</td>
+            {% endif %}
             <td><input type="text" value="{{racer_round.time|duration|default_if_none:''}}" name="time-{{racer_round.id}}"/></td>
             <td><input type="checkbox" value="" name="e-{{racer_round.racer.id}}-{{round.number}}-{{tournament.id}}"/></td>
             <td><input type="checkbox" value="" name="d-{{racer_round.racer.id}}-{{round.number}}-{{tournament.id}}"/></td>
-            {% endif %}
         </tr>
         {% endfor %}
     </table>
+    <br>
     <input type='submit' value='Save'>
+    </form>
+    <br><br><br>
     <a href="/create_next_round/{{tournament.id}}/">Create next round</a>
-</form>
+    </div>
+    
+    <div style="float:right; margin-left:50px">
+        <h1>Eliminated racers</h1>
+        <ul>
+            {% for racer in eliminated_racers %}
+            <li>{{racer.name}} - Eliminated in round {{racer.elimination_round}}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div style="float:right">
+        <h1>Round list</h1>
+        <ul>
+            {% for r in round_list %}
+            <li>
+                Round {{r.number}} 
+                {% if r.number == tournament.current_round %}(CURRENT){% endif %}
+                {% if r.number == round.number %}(VIEWING){% endif %}
+                <a href="/edit_round/{{tournament.id}}/{{r.number}}">(Edit)</a>
+                <a href="/view_round/{{tournament.id}}/{{r.number}}/">(View)</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
 {% endblock %}
