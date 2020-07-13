@@ -25,8 +25,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('KONOT_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# 1 for true, 0 for false
+DEBUG = os.environ.get('KONOT_DEBUG')
 
+# This will be shortly changed
 ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'kotracker.herokuapp.com']
 
 
