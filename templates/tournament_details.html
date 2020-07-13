@@ -1,6 +1,7 @@
 {% extends 'base_dashboard.html' %}
 {% load duration %}
 {% block content %}
+    <h2>{{tournament.name}} - {{tournament.game}} - {{tournament.date|default_if_none:''}}</h2>
     <table>
     <thead>
         <tr>
@@ -21,5 +22,8 @@
     </tbody>
     </table>
     <br><br>
-    <a href="/create_next_round/{{tournament.id}}">(Create next round)</a>
+    <ul>
+    <li><a href="/create_next_round/{{tournament.id}}">(Create next round)</a></li>
+    <li><a href="/rockyirs/tracker/tournament/{{tournament.id}}">(Edit tournament)</a></li>
+    </ul>
 {% endblock %}
