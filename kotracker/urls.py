@@ -21,6 +21,7 @@ urlpatterns = [
     path('', tournament_menu),
     path('rockyirs/', admin.site.urls),
     path('overview/<tournament>', overview_tournament, name='overview'),
+    path('overview_with_details/<tournament>', overview_with_details, name='overview_with_details'),
     path('tournament_details/<tournament>', tournament_details, name='tournament_details'),
     path('view_round/<tournament>/<number>/', view_round, name='view_round'),
     path('edit_round/<tournament>/<number>/', edit_round, name='edit_round'),

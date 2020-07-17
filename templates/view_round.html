@@ -7,7 +7,9 @@
         </tr>
         {% for racer_round in racer_rounds %}
         <tr
-            {% if racer_round.racer.eliminated or racer_round.racer.dropped %}
+            {% if racer_round.racer.eliminated and racer_round.racer.elimination_round <= round.number %}
+            class="dropped"
+            {% elif racer_round.racer.dropped and racer_round.racer.elimination_round <= round.number %}
             class="dropped"
             {% elif forloop.counter == 1 %}
             class="first"
@@ -19,9 +21,9 @@
         >
             <td>{{forloop.counter}}</td>
             <td>{{racer_round.racer}}</td>
-            {% if racer_round.racer.eliminated %}
+            {% if racer_round.racer.eliminated and racer_round.racer.elimination_round <= round.number %}
             <td>Eliminated in round {{racer_round.racer.elimination_round}}</td>
-            {% elif racer_round.racer.dropped %}
+            {% elif racer_round.racer.dropped and racer_round.racer.elimination_round <= round.number %}
             <td>Dropped in round {{racer_round.racer.elimination_round}}</td>
             {% else %}
             <td>{{racer_round.time|default_if_none:''}}</td>

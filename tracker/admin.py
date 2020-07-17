@@ -4,6 +4,7 @@ from .models import *
 
 class RacerInline(admin.TabularInline):
     model = Racer
+    fields = ['name', 'pb', 'dropped', 'eliminated', 'elimination_round', 'best_time_in_race']
     pass
 
 

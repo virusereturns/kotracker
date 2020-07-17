@@ -4,10 +4,12 @@
 <div style="float:left">
 <form method="post">
     {% csrf_token %}
-    <h3>EDITING ROUND {{round.number}} FOR {{tournament.name}}
-        <a target="_blank" href="/view_round/{{ tournament.id}}/{{round.number}}">(Copy this URL in OBS)</a>
-        <a target="_blank" href="/rockyirs/tracker/tournament/{{tournament.id}}/">(Edit tournament)</a>
-    </h3>
+    <h2>EDITING ROUND {{round.number}} FOR {{tournament.name}}</h2>
+    <br>
+    <a target="_blank" href="/view_round/{{ tournament.id}}/{{round.number}}" class='menu-button'>Copy this URL in OBS</a>
+    <a target="_blank" href="/rockyirs/tracker/tournament/{{tournament.id}}/" class='menu-button'>Edit tournament</button></a>
+    <a href="/create_next_round/{{tournament.id}}/" class='menu-button'>Create next round</a>
+    <br><br>
     <p>Input times in MM:ss format</p> 
     <table>
         <tr>
@@ -30,9 +32,9 @@
     </table>
     <br>
     <input type='submit' value='Save'>
-    </form>
-    <br><br><br>
-    <a href="/create_next_round/{{tournament.id}}/">Create next round</a>
+    &nbsp;Remember to save before creating a new round. Racers will be ordered by time
+    <br><br>
+    
     </div>
     
     <div style="float:right; margin-left:50px">
@@ -47,12 +49,12 @@
         <h1>Round list</h1>
         <ul>
             {% for r in round_list %}
-            <li>
+            <li {% if r.number == round.number %}style='color:blue;background-color:yellow'{% endif %}>
                 Round {{r.number}} 
-                {% if r.number == tournament.current_round %}(CURRENT){% endif %}
-                {% if r.number == round.number %}(VIEWING){% endif %}
-                <a href="/edit_round/{{tournament.id}}/{{r.number}}">(Edit)</a>
-                <a href="/view_round/{{tournament.id}}/{{r.number}}/">(View)</a>
+                
+                {% if r.number == tournament.current_round %}[Live]{% endif %}
+                <a href="/edit_round/{{tournament.id}}/{{r.number}}" class="menu-button small-button">Edit</a>
+                <a href="/view_round/{{tournament.id}}/{{r.number}}/" class="menu-button small-button">View</a>
             </li>
             {% endfor %}
         </ul>

@@ -30,6 +30,7 @@ th {
   padding-left: 30px;
 }
 td {
+  vertical-align: center !important;
   text-align: left;
   padding-left: 30px;
 }
@@ -37,19 +38,18 @@ tr {
   font-size: 20px;
 }
 .first {
-  color: rgb(193, 193, 255);
+  color: #D4AF37;
   font-size: 26px;
 }
 .second {
-  color: rgb(255, 193, 193);
+  color: #C0C0C0;
   font-size: 24px;
 }
 .third {
-  color: rgb(255, 255, 255);
+  color: #CD7F32;
   font-size: 22px;
 }
 .dropped {
-  color: rgb(255, 0, 0);
+  color: rgb(255, 50, 50);
   font-size: 20px;
 }
-

@@ -248,7 +248,7 @@ td, th {
     font-size: 13px;
     line-height: 16px;
     border-bottom: 1px solid #eee;
-    vertical-align: top;
+    vertical-align: center !important;
     padding: 8px;
     font-family: "Roboto", "Lucida Grande", Verdana, Arial, sans-serif;
 }
@@ -1002,4 +1002,23 @@ table#change-history tbody th {
 
 .iterator-subscription-block p{
     line-height: 0.8em;
+}
+
+.menu-button{
+    background: #2A2A2A;
+    padding: 7px 10px;
+    border: none;
+    border-radius: 4px;
+    color: #fff !important;
+    cursor: pointer;
+    transition-duration: 0.4s;
+}
+
+.menu-button:hover{
+    background: #a5a5a5;
+}
+
+.small-button{
+    font-size: 12px;
+    padding: 2px 5px;
 }

@@ -5,15 +5,12 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect
 from .models import *
 
-# Create your views here.
-
 
 def view_round(request, tournament, number):
     tournament_object = get_object_or_404(Tournament, pk=tournament)
     round_object = get_object_or_404(Round, tournament=tournament, number=number)
     racer_rounds = RacerRound.objects.filter(
         racer__tournament=tournament_object, round_number=round_object).order_by('-racer__elimination_round', 'time')
-    # return HttpResponse("round {} tournament {}".format(round_object, tournament_object))
     return render(request, 'view_round.html', {
         'racer_rounds': racer_rounds, 'round': round_object, 'tournament': tournament_object})
 
@@ -61,6 +58,13 @@ def edit_round(request, tournament, number):
                 racer_round = RacerRound.objects.get(pk=racer_round_id)
                 racer_round.time = "00:" + value
                 racer_round.save()
+                # Next we'll see if this was the fastest run for this racer, get it again so the time is converted
+                racer_round = RacerRound.objects.get(pk=racer_round_id)
+                racer = racer_round.racer
+                if racer.best_time_in_race is None or racer.best_time_in_race and \
+                        racer.best_time_in_race > racer_round.time:
+                    racer.best_time_in_race = racer_round.time
+                    racer.save()
         return HttpResponseRedirect(reverse('edit_round', kwargs={
             'tournament': tournament, 'number': number}))
 
@@ -75,6 +79,13 @@ def overview_tournament(request, tournament):
     tournament_object = get_object_or_404(Tournament, pk=tournament)
     racers = Racer.objects.filter(tournament=tournament_object).order_by('pb')
     return render(request, 'overview_tournament.html', {
+        'racers': racers, 'tournament': tournament_object})
+
+
+def overview_with_details(request, tournament):
+    tournament_object = get_object_or_404(Tournament, pk=tournament)
+    racers = Racer.objects.filter(tournament=tournament_object).order_by('-elimination_round', 'best_time_in_race')
+    return render(request, 'overview_with_details.html', {
         'racers': racers, 'tournament': tournament_object})
 
 

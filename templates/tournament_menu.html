@@ -13,11 +13,12 @@
             <td>{{tournament.name}}</td>
             <td>{{tournament.current_round}}</td>
             <td>
-                <a href="/tournament_details/{{tournament.id}}">(Details/Rounds)</a>
-                <a href="/create_next_round/{{tournament.id}}">(Create next round)</a>
-                <a href="/edit_round/{{tournament.id}}/{{tournament.current_round}}/">(Jump to last round)</a>
-                <a href="/overview/{{tournament.id}}">(Overview URL)</a>
-                <a href="/end_stats/{{tournament.id}}">(End stats URL)</a>
+                <a href="/tournament_details/{{tournament.id}}" target='_blank'><button class='menu-button'>Details/Rounds</button></a>
+                <a href="/rockyirs/tracker/tournament/{{tournament.id}}" target='_blank'><button class='menu-button'>Edit</button></a>
+                <a href="/create_next_round/{{tournament.id}}" target='_blank'><button class='menu-button'>Create next round</button></a>
+                <a href="/edit_round/{{tournament.id}}/{{tournament.current_round}}/" target='_blank'><button class='menu-button'>Edit last round</button></a>
+                <a href="/overview/{{tournament.id}}" target='_blank'><button class='menu-button' target='_blank'>Overview URL</button></a>
+                <a href="/overview_with_details/{{tournament.id}}" target='_blank'><button class='menu-button'>Overview with details URL</button></a>
             </td>
         </tr>
 

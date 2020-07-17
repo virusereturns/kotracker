@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 from datetime import timedelta
 
 
@@ -33,6 +34,9 @@ class Racer(models.Model):
     position = models.PositiveSmallIntegerField(null=True, blank=True)
     best_time_in_race = models.DurationField(null=True, blank=True)
     average_time_in_race = models.DurationField(null=True, blank=True)
+
+    def get_average_time(self):
+        return RacerRound.objects.filter(racer=self, time__isnull=False).aggregate(Avg('time'))['time__avg']
 
     def __str__(self):
         return self.name

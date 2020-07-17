@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load duration %}
+{% block content %}
+    <table>
+        <h3>{{tournament.name}} OVERALL RESULTS</h3>
+        <tr>
+            <th>#</th><th>Racer</th><th>Best</th><th>Avg</th><th>KO</th>
+        </tr>
+        {% for racer in racers %}
+        <tr
+            {% if forloop.counter == 1 %}
+            class="first"
+            {% elif forloop.counter == 2 %}
+            class="second"
+            {% elif forloop.counter == 3 %}
+            class="third"
+            {% endif %}>
+            <td>{{forloop.counter}}</td>
+            <td>{{racer.name}}</td>
+            <td>{{racer.best_time_in_race|duration|default_if_none:'N/A'}}</td>
+            <td>{{racer.get_average_time|duration}}</td>
+            <th>{{racer.elimination_round|default_if_none:''}}</th>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
