@@ -87,6 +87,8 @@ class RacerRound(models.Model):
             except RacerRound.DoesNotExist:
                 return ''
             previous_round_position = previous_round.position_in_round
+            if previous_round_position is None:
+                return ''
             this_round_position = self.position_in_round
             difference = previous_round_position - this_round_position
             if difference == 0:
