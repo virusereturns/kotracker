@@ -63,6 +63,7 @@ class RacerRound(models.Model):
     dnf = models.BooleanField(default=False)
     eliminated = models.BooleanField(default=False)
     dropped = models.BooleanField(default=False)
+    position_in_round = models.PositiveSmallIntegerField(null=True, blank=True)
 
     def __str__(self):
         return "{}'s round {} on {} {}".format(
@@ -73,3 +74,24 @@ class RacerRound(models.Model):
 
     def get_last_round_time(self):
         return RacerRound.objects.get(racer=self.racer, round_number__number=self.round_number.number - 1).time or '-'
+
+    def get_difference_with_last_round(self):
+        if self.round_number.number == 1:
+            return ''
+        elif self.position_in_round is None:
+            return ''
+        else:
+            try:
+                previous_round = RacerRound.objects.get(
+                    racer=self.racer, round_number__number=self.round_number.number - 1)
+            except RacerRound.DoesNotExist:
+                return ''
+            previous_round_position = previous_round.position_in_round
+            this_round_position = self.position_in_round
+            difference = previous_round_position - this_round_position
+            if difference == 0:
+                return '<span style="color:orange">-</span>'
+            elif difference < 0:
+                return '<span style="color:red">▼{}</span>'.format(abs(difference))
+            elif difference > 0:
+                return '<span style="color:green">▲{}</span>'.format(abs(difference))

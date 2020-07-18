@@ -3,7 +3,7 @@
     <table>
         <h3>END OF ROUND {{round.number}}</h3>
         <tr>
-            <th>#</th><th>Racer</th><th>Time</th>
+            <th>#</th><th>Racer</th><th>Time</th><th></th>
         </tr>
         {% for racer_round in racer_rounds %}
         <tr
@@ -28,6 +28,9 @@
             {% else %}
             <td>{{racer_round.time|default_if_none:''}}</td>
             {% endif %}
+            {% autoescape off %}
+            <td>{{racer_round.get_difference_with_last_round}}</td>
+            {% endautoescape %}
         </tr>
         {% endfor %}
     </table>

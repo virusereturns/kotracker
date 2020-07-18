@@ -65,6 +65,15 @@ def edit_round(request, tournament, number):
                         racer.best_time_in_race > racer_round.time:
                     racer.best_time_in_race = racer_round.time
                     racer.save()
+        # After this has finished, we'll iterate through every finished runner so we can register their position
+        position = 0
+        for racer_round in RacerRound.objects.filter(
+            racer__tournament=tournament_object, round_number=round_object, racer__eliminated=False,
+                racer__dropped=False).order_by('time'):
+            position = position + 1
+            racer_round.position_in_round = position
+            racer_round.save()
+
         return HttpResponseRedirect(reverse('edit_round', kwargs={
             'tournament': tournament, 'number': number}))
 
