@@ -23,14 +23,16 @@
             <td>{{racer_round.racer}}</td>
             {% if racer_round.racer.eliminated and racer_round.racer.elimination_round <= round.number %}
             <td>Eliminated in round {{racer_round.racer.elimination_round}}</td>
+            <td></td>
             {% elif racer_round.racer.dropped and racer_round.racer.elimination_round <= round.number %}
             <td>Dropped in round {{racer_round.racer.elimination_round}}</td>
+            <td></td>
             {% else %}
             <td>{{racer_round.time|default_if_none:''}}</td>
-            {% endif %}
             {% autoescape off %}
             <td>{{racer_round.get_difference_with_last_round}}</td>
             {% endautoescape %}
+            {% endif %}
         </tr>
         {% endfor %}
     </table>
