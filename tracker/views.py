@@ -17,7 +17,7 @@ def view_round(request, tournament, number):
 
 def view_last_round(request, tournament):
     tournament_object = get_object_or_404(Tournament, pk=tournament)
-    round_object = get_object_or_404(Round, tournament=tournament, number=tournament.round_number)
+    round_object = get_object_or_404(Round, tournament=tournament, number=tournament_object.current_round())
     racer_rounds = RacerRound.objects.filter(
         racer__tournament=tournament_object, round_number=round_object).order_by('-racer__elimination_round', 'time')
     return render(request, 'view_round.html', {
