@@ -15,6 +15,15 @@ def view_round(request, tournament, number):
         'racer_rounds': racer_rounds, 'round': round_object, 'tournament': tournament_object})
 
 
+def view_last_round(request, tournament):
+    tournament_object = get_object_or_404(Tournament, pk=tournament)
+    round_object = get_object_or_404(Round, tournament=tournament, number=tournament.round_number)
+    racer_rounds = RacerRound.objects.filter(
+        racer__tournament=tournament_object, round_number=round_object).order_by('-racer__elimination_round', 'time')
+    return render(request, 'view_round.html', {
+        'racer_rounds': racer_rounds, 'round': round_object, 'tournament': tournament_object})
+
+
 @login_required
 def edit_round(request, tournament, number):
     tournament_object = get_object_or_404(Tournament, pk=tournament)
