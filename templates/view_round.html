@@ -22,7 +22,7 @@
             <td>{{forloop.counter}}</td>
             <td>{{racer_round.racer}}</td>
             {% if racer_round.racer.eliminated and racer_round.racer.elimination_round <= round.number %}
-            <td>Eliminated in round {{racer_round.racer.elimination_round}}</td>
+            <td>KO in round {{racer_round.racer.elimination_round}}</td>
             <td></td>
             {% elif racer_round.racer.dropped and racer_round.racer.elimination_round <= round.number %}
             <td>Dropped in round {{racer_round.racer.elimination_round}}</td>

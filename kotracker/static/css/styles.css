@@ -5,6 +5,7 @@
   src: url("../fonts/MANDELA_.TTF");
 }
 body {
+    letter-spacing: 1px;
     background-color: #FF00FF;
     font-family: "Tecmo";
     color: antiquewhite;
@@ -19,13 +20,17 @@ body {
       -2px  0px #151515,
       -2px -2px #151515;
 }
+table{
+  border-collapse: separate;
+  border-spacing: 0 1px;
+}
 h3 {
   font-size: 30px;
   text-align: center;
   color: yellow;
 }
 th {
-  font-size: 24px;
+  font-size: 26px;
   text-align: left;
   padding-left: 30px;
 }
@@ -35,21 +40,21 @@ td {
   padding-left: 30px;
 }
 tr {
-  font-size: 20px;
+  font-size: 26px;
 }
 .first {
   color: #D4AF37;
-  font-size: 26px;
+  font-size: 30px;
 }
 .second {
   color: #C0C0C0;
-  font-size: 24px;
+  font-size: 28px;
 }
 .third {
   color: #CD7F32;
-  font-size: 22px;
+  font-size: 26px;
 }
 .dropped {
   color: rgb(255, 50, 50);
-  font-size: 20px;
+  font-size: 26px;
 }
