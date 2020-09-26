@@ -7,8 +7,9 @@
 body {
     letter-spacing: 1px;
     background-color: #FF00FF;
-    font-family: "Tecmo";
+    font-family: "Arial";
     color: antiquewhite;
+    /*
     text-shadow: 
       5px  5px #151515,
       2px  2px #151515,
@@ -19,42 +20,49 @@ body {
       -2px  2px #151515,
       -2px  0px #151515,
       -2px -2px #151515;
+    */
+    text-shadow: 
+      -1px -1px 0 #000, 
+      1px -1px 0 #000,
+      -1px 1px 0 #000,
+      1px 1px 0 #000,
+      3px 3px 0 #444;
 }
 table{
   border-collapse: separate;
   border-spacing: 0 1px;
 }
 h3 {
-  font-size: 30px;
+  font-size: 28px;
   text-align: center;
   color: yellow;
 }
 th {
-  font-size: 26px;
+  font-size: 24px;
   text-align: left;
-  padding-left: 30px;
+  padding-left: 28px;
 }
 td {
   vertical-align: center !important;
   text-align: left;
-  padding-left: 30px;
+  padding-left: 28px;
 }
 tr {
-  font-size: 26px;
+  font-size: 24px;
 }
 .first {
   color: #D4AF37;
-  font-size: 30px;
+  font-size: 28px;
 }
 .second {
   color: #C0C0C0;
-  font-size: 28px;
+  font-size: 26px;
 }
 .third {
   color: #CD7F32;
-  font-size: 26px;
+  font-size: 24px;
 }
 .dropped {
   color: rgb(255, 50, 50);
-  font-size: 26px;
+  font-size: 24px;
 }
