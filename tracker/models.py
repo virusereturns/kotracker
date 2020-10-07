@@ -18,6 +18,8 @@ def duration(td):
     seconds = td.seconds
     minutes = (seconds % 3600) // 60
     seconds = seconds % 60
+    if seconds < 10:
+        seconds = "0" + str(seconds)
     return "{}:{}".format(minutes, seconds)
 
 
