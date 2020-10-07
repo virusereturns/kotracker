@@ -21,11 +21,15 @@
                 {% endif %}
                 {% if tournament.mode == 2%}
                     <a href="/overview/{{tournament.id}}" target='_blank'><button class='menu-button' target='_blank'>OBS Overview + PB</button></a>
-                    <a href="/overview_pb_mode/{{tournament.id}}/" target='_blank'><button class='menu-button'>OBS LAST ROUND (PB MODE)</button></a>
+                    {% if tournament.current_round > 0 %}
+                        <a href="/overview_pb_mode/{{tournament.id}}/" target='_blank'><button class='menu-button'>OBS LAST ROUND (PB MODE)</button></a>
+                    {% endif %}
                 {% else %}
                     <a href="/overview/{{tournament.id}}" target='_blank'><button class='menu-button' target='_blank'>OBS Overview + PB</button></a>
-                    <a href="/overview_with_details/{{tournament.id}}" target='_blank'><button class='menu-button'>OBS Overview + details</button></a>
-                    <a href="/view_last_round/{{tournament.id}}/" target='_blank'><button class='menu-button'>OBS LAST ROUND</button></a>
+                    {% if tournament.current_round > 0 %}
+                        <a href="/overview_with_details/{{tournament.id}}" target='_blank'><button class='menu-button'>OBS Overview + details</button></a>
+                        <a href="/view_last_round/{{tournament.id}}/" target='_blank'><button class='menu-button'>OBS LAST ROUND</button></a>
+                    {% endif %}
                 {% endif %}
                 <a href="/rockyirs/tracker/tournament/{{tournament.id}}" target='_blank'><button class='menu-button'>Edit in admin</button></a>
 
