@@ -11,8 +11,8 @@
     {% for tournament in tournaments %}
         <tr>
             <td>{{tournament.name}}</td>
+            <td>{{tournament.date|default_if_none:"-"}}</td>
             <td>{{tournament.current_round}}</td>
-            <td>{{tournament.date}}</td>
             <td>
                 {% if tournament.current_round == 0 %}
                     <a href="/create_next_round/{{tournament.id}}/" target='_blank'><button class='menu-button'>Create FIRST round</button></a>
