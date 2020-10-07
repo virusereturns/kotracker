@@ -1,5 +1,13 @@
 {% extends 'base.html' %}
 {% load duration %}
+{% block css %}
+    {{block.super}}
+    <style>
+    body{
+        font-family: {{tournament.font}} !important;
+    }
+    </style>
+{% endblock %}
 {% block content %}
     <table>
         <caption style="color:yellow">KNOCKOUT STANDINGS</caption>

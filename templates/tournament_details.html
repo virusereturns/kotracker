@@ -1,5 +1,13 @@
 {% extends 'base_dashboard.html' %}
 {% load duration %}
+{% block css %}
+    {{block.super}}
+    <style>
+    body{
+        font-family: {{tournament.font}} !important;
+    }
+    </style>
+{% endblock %}
 {% block content %}
     <h2>{{tournament.name}} - {{tournament.game}} - {{tournament.date|default_if_none:''}}</h2>
     <table>
