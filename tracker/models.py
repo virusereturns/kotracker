@@ -9,10 +9,10 @@ MODE_CHOICES = (
 )
 
 FONT_CHOICES = (
-    ('MANDELA_.TTF', 'Mandela'),
-    ('bradley_gratis.ttf', 'Bradley Gratis'),
-    ('GF-TecmoSet1.TTF', 'Tecmo 1'),
-    ('GF-TecmoSet2.TTF', 'Tecmo 2'),
+    ('Mandela', 'Mandela'),
+    ('Bradley_Gratis', 'Bradley_Gratis'),
+    ('Tecmo_1', 'Tecmo_1'),
+    ('Tecmo_2', 'Tecmo_2'),
 )
 
 

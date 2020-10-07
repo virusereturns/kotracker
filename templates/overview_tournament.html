@@ -1,4 +1,12 @@
 {% extends 'base.html' %}
+{% block css %}
+{{block.super}}
+<style>
+body{
+    font-family: {{tournament.font}} !important;
+}
+</style>
+{% endblock %}
 {% load duration %}
 {% block content %}
     <table>

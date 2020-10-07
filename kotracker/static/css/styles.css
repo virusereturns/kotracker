@@ -1,8 +1,16 @@
 /* Credits to baldnate */
 
 @font-face {
-  font-family: "Tecmo";
-  src: url("../fonts/MANDELA_.TTF");
+  font-family: "Tecmo_1";
+  src: url("../fonts/GF-TecmoSet1.TTF");
+}
+@font-face {
+  font-family: "Tecmo_2";
+  src: url("../fonts/GF-TecmoSet2.TTF");
+}
+@font-face {
+  font-family: "Bradley_Gratis";
+  src: url("../fonts/bradley_gratis.ttf");
 }
 @font-face {
   font-family: "Mandela";
