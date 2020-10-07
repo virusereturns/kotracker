@@ -13,7 +13,11 @@
             <td>{{tournament.name}}</td>
             <td>{{tournament.current_round}}</td>
             <td>
-                <a href="/edit_round/{{tournament.id}}/{{tournament.current_round}}/" target='_blank'><button class='menu-button'>Edit last round</button></a>                
+                {% if tournament.current_round == 0 %}
+                    <a href="/create_next_round/{{tournament.id}}/" target='_blank'><button class='menu-button'>Create FIRST round</button></a>
+                {% else %}
+                    <a href="/edit_round/{{tournament.id}}/{{tournament.current_round}}/" target='_blank'><button class='menu-button'>Go to round {{tournament.current_round}}</button></a>
+                {% endif %}
                 {% if tournament.mode == 2%}
                     <a href="/overview/{{tournament.id}}" target='_blank'><button class='menu-button' target='_blank'>OBS Overview + PB</button></a>
                     <a href="/overview_pb_mode/{{tournament.id}}/" target='_blank'><button class='menu-button'>OBS LAST ROUND (PB MODE)</button></a>
