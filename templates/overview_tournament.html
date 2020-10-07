@@ -2,7 +2,7 @@
 {% load duration %}
 {% block content %}
     <table>
-        <h3>{{tournament.name}}</h3>
+        <caption>{{tournament.name}}</caption>
         <tr>
             <th>#</th><th>Racer</th><th>PB</th>
         </tr>
@@ -10,7 +10,7 @@
         <tr>
             <td>{{forloop.counter}}</td>
             <td>{{racer.name}}</td>
-            <td>{{racer.pb|duration|default_if_none:'???'}}</td>
+            <td>{{racer.get_pb}}</td>
         </tr>
         {% endfor %}
     </table>

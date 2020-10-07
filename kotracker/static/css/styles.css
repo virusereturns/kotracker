@@ -4,10 +4,14 @@
   font-family: "Tecmo";
   src: url("../fonts/MANDELA_.TTF");
 }
+@font-face {
+  font-family: "Mandela";
+  src: url("../fonts/MANDELA_.TTF");
+}
 body {
     letter-spacing: 1px;
     background-color: #FF00FF;
-    font-family: "Arialc";
+    font-family: "Mandela";
     color: antiquewhite;
     /*
     text-shadow: 
@@ -33,22 +37,28 @@ table{
   border-spacing: 0 1px;
 }
 h3 {
-  font-size: 22px;
+  font-size: 24px;
   text-align: center;
   color: yellow;
 }
+caption {
+  font-size: 28px;
+  text-align: center;
+  color: yellow;
+  margin-bottom:10px;
+}
 th {
-  font-size: 18px;
+  font-size: 20px;
   text-align: left;
-  padding-left: 22px;
+  padding-left: 24px;
 }
 td {
   vertical-align: center !important;
   text-align: left;
-  padding-left: 22px;
+  padding-left: 24px;
 }
 tr {
-  font-size: 18px;
+  font-size: 20px;
 }
 table tr {
     border-bottom: 1px dotted #444;
@@ -58,17 +68,17 @@ table tr:last-child {
 }
 .first {
   color: #D4AF37;
-  font-size: 22px;
+  font-size: 24px;
 }
 .second {
   color: #C0C0C0;
-  font-size: 20px;
+  font-size: 22px;
 }
 .third {
   color: #CD7F32;
-  font-size: 18px;
+  font-size: 20px;
 }
 .dropped {
   color: rgb(255, 50, 50);
-  font-size: 18px;
+  font-size: 20px;
 }

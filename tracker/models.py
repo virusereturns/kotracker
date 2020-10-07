@@ -3,6 +3,24 @@ from django.db.models import Avg
 from datetime import timedelta
 
 
+MODE_CHOICES = (
+    (1, 'Normal'),
+    (2, 'PB'),
+)
+
+
+def ordinal(n):
+    return "{}{}".format(n, "tsnrhtdd"[(n // 10 % 10 != 1) * (n % 10 < 4) * n % 10::4])
+
+
+def duration(td):
+    # Converts a timedelta to MM:SS
+    seconds = td.seconds
+    minutes = (seconds % 3600) // 60
+    seconds = seconds % 60
+    return "{}:{}".format(minutes, seconds)
+
+
 class Tournament(models.Model):
     """
     Description: Model Description
@@ -10,6 +28,7 @@ class Tournament(models.Model):
     name = models.CharField(max_length=150)
     date = models.DateField(null=True, blank=True)
     game = models.CharField(max_length=150)
+    mode = models.PositiveSmallIntegerField(default=1, choices=MODE_CHOICES)
 
     def __str__(self):
         return self.name
@@ -37,6 +56,20 @@ class Racer(models.Model):
 
     def get_average_time(self):
         return RacerRound.objects.filter(racer=self, time__isnull=False).aggregate(Avg('time'))['time__avg']
+
+    def knockout_finish(self):
+        count = self.tournament.racer_set.count()
+        if self.elimination_round:
+            n = count - self.elimination_round + 1
+            return ordinal(n)
+        else:
+            return None
+
+    def get_pb(self):
+        if self.pb:
+            return duration(self.pb)
+        else:
+            return '???'
 
     def __str__(self):
         return self.name

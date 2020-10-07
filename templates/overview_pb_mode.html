@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load duration %}
+{% block content %}
+    <table>
+        <caption style="color:yellow">KNOCKOUT STANDINGS</caption>
+        <tr>
+            <th>RACER</th><th>PB (SRC)</th><th>KNOCKOUT FINISH</th>
+        </tr>
+        {% for racer in racers %}
+        <tr>
+            <td>{{racer.name}}</td>
+            <td>{{racer.get_pb}}</td>
+            {% if racer.eliminated or racer.dropped %}
+            <td>{{racer.knockout_finish}}</td>
+            {% else %}
+            <td></td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

@@ -30,16 +30,23 @@ def edit_round(request, tournament, number):
     round_object = get_object_or_404(Round, tournament=tournament, number=number)
     racer_rounds = RacerRound.objects.filter(
         racer__tournament=tournament_object, round_number=round_object,
-        racer__eliminated=False, racer__dropped=False).order_by('time')
+        racer__eliminated=False, racer__dropped=False)
+    if tournament_object.mode == 2:
+        racer_rounds = racer_rounds.order_by('racer__pb')
+    else:
+        # If this is not PB mode, we're gonna order them by time
+        racer_rounds = racer_rounds.order_by('time')
     eliminated_racers = Racer.objects.filter(
         Q(eliminated=True) | Q(dropped=True), tournament=tournament_object).order_by('-elimination_round')
-    if int(number) > 1:
-        sort = True
-        for racer_round in racer_rounds:
-            if racer_round.time:
-                sort = False
-                break
-        racer_rounds = sorted(racer_rounds, key=lambda a: a.get_last_round_time()) if sort else racer_rounds
+    if tournament_object.mode != 2:
+        # We're not gonna do this if this is tourament mode
+        if int(number) > 1:
+            sort = True
+            for racer_round in racer_rounds:
+                if racer_round.time:
+                    sort = False
+                    break
+            racer_rounds = sorted(racer_rounds, key=lambda a: a.get_last_round_time()) if sort else racer_rounds
     if request.POST:
         # Process eliminates
         for name, value in request.POST.items():
@@ -47,7 +54,6 @@ def edit_round(request, tournament, number):
                 bits = name.split('-')
                 racer = bits[1]
                 round = bits[2]
-                # tournament = bits[3]
                 racer = Racer.objects.get(pk=racer)
                 racer.eliminated = True
                 racer.elimination_round = round
@@ -56,12 +62,12 @@ def edit_round(request, tournament, number):
                 bits = name.split('-')
                 racer = bits[1]
                 round = bits[2]
-                # tournament = bits[3]
                 racer = Racer.objects.get(pk=racer)
                 racer.dropped = True
                 racer.elimination_round = round
                 racer.save()
-            elif name.startswith('time') and value:
+            elif name.startswith('time') and value and tournament_object.mode != 2:
+                # We're not gonna do this if this is PB mode
                 bits = name.split('-')
                 racer_round_id = bits[1]
                 racer_round = RacerRound.objects.get(pk=racer_round_id)
@@ -107,6 +113,13 @@ def overview_with_details(request, tournament):
         'racers': racers, 'tournament': tournament_object})
 
 
+def overview_pb_mode(request, tournament):
+    tournament_object = get_object_or_404(Tournament, pk=tournament)
+    racers = Racer.objects.filter(tournament=tournament_object).order_by('pb')
+    return render(request, 'overview_pb_mode.html', {
+        'racers': racers, 'tournament': tournament_object})
+
+
 @login_required
 def create_next_round(request, tournament):
     tournament = get_object_or_404(Tournament, pk=tournament)
@@ -137,3 +150,13 @@ def tournament_details(request, tournament):
     rounds = tournament_object.round_set.all()
     return render(request, 'tournament_details.html', {
         'tournament': tournament_object, 'rounds': rounds})
+
+
+@login_required
+def revive_racer(request, racer_id):
+    racer = get_object_or_404(Racer, pk=racer_id)
+    racer.elimination_round = None
+    racer.eliminated = False
+    racer.dropped = False
+    racer.save()
+    return HttpResponseRedirect(reverse("main_menu"))

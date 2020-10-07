@@ -6,25 +6,36 @@
     {% csrf_token %}
     <h2>EDITING ROUND {{round.number}} FOR {{tournament.name}}</h2>
     <br>
-    <a target="_blank" href="/view_round/{{ tournament.id}}/{{round.number}}" class='menu-button'>Copy this URL in OBS</a>
+    {% if tournament.mode == 2 %}
+        <a target="_blank" href="/overview_pb_mode/{{ tournament.id }}/" class='menu-button'>Copy this URL in OBS</a>
+    {% else %}
+        <a target="_blank" href="/view_round/{{ tournament.id }}/{{round.number}}" class='menu-button'>Copy this URL in OBS</a>
+    {% endif %}
     <a target="_blank" href="/rockyirs/tracker/tournament/{{tournament.id}}/" class='menu-button'>Edit tournament</button></a>
     <a href="/create_next_round/{{tournament.id}}/" class='menu-button'>Create next round</a>
     <br><br>
     <p>Input times in MM:ss format</p> 
     <table>
         <tr>
-            <th>#</th><th>Racer</th><th>Previous Round</th><th>Time</th><th>Eliminate</th><th>Drop</th>
+            <th>#</th><th>Racer</th>
+            {% if tournament.mode != 2 %}
+            <th>Previous Round</th>
+            <th>Time</th>
+            {% endif %}
+            <th>Eliminate</th><th>Drop</th>
         </tr>
         {% for racer_round in racer_rounds %}
         <tr>
             <td>{{forloop.counter}}</td>
             <td>{{racer_round.racer}}</td>
+            {% if tournament.mode != 2%}
             {% if round.number == 1 %}
             <td>-</td>
             {% else %}
             <td>{{racer_round.get_last_round_time}}</td>
             {% endif %}
             <td><input type="text" value="{{racer_round.time|duration|default_if_none:''}}" name="time-{{racer_round.id}}"/></td>
+            {% endif %}
             <td><input type="checkbox" value="" name="e-{{racer_round.racer.id}}-{{round.number}}-{{tournament.id}}"/></td>
             <td><input type="checkbox" value="" name="d-{{racer_round.racer.id}}-{{round.number}}-{{tournament.id}}"/></td>
         </tr>
@@ -32,7 +43,7 @@
     </table>
     <br>
     <input type='submit' value='Save'>
-    &nbsp;Remember to save before creating a new round. Racers will be ordered by time
+    &nbsp;Remember to save before creating a new round. Racers will be ordered by {% if tournament.mode == 1 %}time{% elif tournament.mode == 2 %}PB{% endif %}
     <br><br>
     
     </div>
@@ -41,7 +52,7 @@
         <h1>Eliminated racers</h1>
         <ul>
             {% for racer in eliminated_racers %}
-            <li>{{racer.name}} - {% if racer.eliminated %}Eliminated{%else%}Dropped{%endif%} in round {{racer.elimination_round}}</li>
+            <li>{{racer.name}} - {% if racer.eliminated %}Eliminated{%else%}Dropped{%endif%} in round {{racer.elimination_round}} <a href="/revive_racer/{{racer.id}}/">[Rez]</a></li>
             {% endfor %}
         </ul>
     </div>
