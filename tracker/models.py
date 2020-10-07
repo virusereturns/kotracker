@@ -8,6 +8,13 @@ MODE_CHOICES = (
     (2, 'PB'),
 )
 
+FONT_CHOICES = (
+    ('MANDELA_.TTF', 'Mandela'),
+    ('bradley_gratis.ttf', 'Bradley Gratis'),
+    ('GF-TecmoSet1.TTF', 'Tecmo 1'),
+    ('GF-TecmoSet2.TTF', 'Tecmo 2'),
+)
+
 
 def ordinal(n):
     return "{}{}".format(n, "tsnrhtdd"[(n // 10 % 10 != 1) * (n % 10 < 4) * n % 10::4])
@@ -31,6 +38,7 @@ class Tournament(models.Model):
     date = models.DateField(null=True, blank=True)
     game = models.CharField(max_length=150)
     mode = models.PositiveSmallIntegerField(default=1, choices=MODE_CHOICES)
+    font = models.CharField(max_length=100, default='Mandela', choices=FONT_CHOICES)
 
     def __str__(self):
         return self.name
