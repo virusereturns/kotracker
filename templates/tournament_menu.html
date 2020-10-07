@@ -4,7 +4,7 @@
     <table>
     <thead>
         <tr>
-            <th>Name</th><th>Current round</th><th>Actions</th>
+            <th>Name</th><th>Date</th><th>Current round</th><th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -12,6 +12,7 @@
         <tr>
             <td>{{tournament.name}}</td>
             <td>{{tournament.current_round}}</td>
+            <td>{{tournament.date}}</td>
             <td>
                 {% if tournament.current_round == 0 %}
                     <a href="/create_next_round/{{tournament.id}}/" target='_blank'><button class='menu-button'>Create FIRST round</button></a>

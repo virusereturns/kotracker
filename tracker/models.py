@@ -44,7 +44,7 @@ class Tournament(models.Model):
         return self.name
 
     class Meta:
-        pass
+        ordering = ['date']
 
     def current_round(self):
         return self.round_set.count()
