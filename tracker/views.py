@@ -105,7 +105,8 @@ def process_round(request, tournament_id):
     except Exception:
         previous_round = Round.objects.get(number=current_round_number, tournament=tournament)
     racer_rounds = RacerRound.objects.filter(
-        racer__tournament=tournament, round_number=previous_round, racer__eliminated=False, racer__dropped=False)
+        racer__tournament=tournament, round_number=previous_round, racer__eliminated=False,
+        racer__dropped=False).order_by('time')
     eliminated_racers = Racer.objects.filter(
         Q(eliminated=True) | Q(dropped=True), tournament=tournament).order_by('-elimination_round')
     eliminated_racers_list = []
@@ -200,9 +201,10 @@ def overview_tournament(request, tournament):
 
 def overview_with_details(request, tournament):
     tournament_object = get_object_or_404(Tournament, pk=tournament)
-    racers = Racer.objects.filter(tournament=tournament_object).order_by('-elimination_round', 'best_time_in_race')
+    racers = Racer.objects.filter(tournament=tournament_object).order_by('-elimination_round')
+    sorted_racers = sorted(racers, key=lambda r: r.get_best_time() or timedelta(999))
     return render(request, 'overview_with_details.html', {
-        'racers': racers, 'tournament': tournament_object})
+        'racers': sorted_racers, 'tournament': tournament_object})
 
 
 def overview_pb_mode(request, tournament):

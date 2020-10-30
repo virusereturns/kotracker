@@ -71,10 +71,10 @@ class Racer(models.Model):
         return RacerRound.objects.filter(racer=self, time__isnull=False).aggregate(Min('time'))['time__min']
 
     def knockout_finish(self):
-        count = self.tournament.racer_set.count()
+        # count = self.tournament.racer_set.count()
         if self.elimination_round:
-            n = count - self.elimination_round + 1
-            return ordinal(n)
+            n = self.elimination_round
+            return "{} round".format(ordinal(n))
         else:
             return None
 
