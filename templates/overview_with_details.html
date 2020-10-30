@@ -25,7 +25,7 @@
             {% endif %}>
             <td>{{forloop.counter}}</td>
             <td>{{racer.name}}</td>
-            <td>{{racer.best_time_in_race|duration|default_if_none:'N/A'}}</td>
+            <td>{{racer.get_best_time|duration|default_if_none:'N/A'}}</td>
             <td>{{racer.get_average_time|duration}}</td>
             <th>{{racer.elimination_round|default_if_none:''}}</th>
         </tr>

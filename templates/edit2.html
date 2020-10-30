@@ -1,29 +1,25 @@
-{% extends 'base.html' %}
+{% extends 'base_dashboard.html' %}
 {% load duration %}
-{% block css %}
-    {{block.super}}
-    <style>
-    body{
-        font-family: {{tournament.font}} !important;
-    }
-    </style>
-{% endblock %}
 {% block content %}
+<div style="float:left">
+    <h2>GETTING DATA FOR ROUND {{tournament.current_round}} ON {{tournament.name}}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="id_text_input">Input bot output</label><br>
+        <textarea name="bot_output" id="id_text_input" rows="10" cols="80" required></textarea><br><br>
+        <label for="id_eliminated_players">Eliminated racers amount</label><br>
+        <input type="number" name="eliminated_racers" id="id_eliminated_racers" required/><br><br>
+        <input type="submit" value="Save and go to next round">
+    </form>
+</div>
+{% if previous_round > 0 %}
+<div style="float:left;margin-left:100px">
     <table>
-        <caption>END OF ROUND {{round.number}}</caption>
+        <caption>END OF ROUND {{previous_round}}</caption>
         <tr>
             <th>#</th><th>Racer</th><th>Time</th><th></th>
         </tr>
         {% for racer_round in racer_rounds %}
-        <tr
-            {% if forloop.counter == 1 %}
-            class="first"
-            {% elif forloop.counter == 2 %}
-            class="second"
-            {% elif forloop.counter == 3 %}
-            class="third"
-            {% endif %}
-        >
             <td>{{forloop.counter}}</td>
             <td>{{racer_round.racer}}</td>
             <td>{{racer_round.time|duration}}</td>
@@ -40,4 +36,7 @@
         </tr>
         {% endfor %} 
     </table>
+</div>
+
+{% endif %}
 {% endblock %}

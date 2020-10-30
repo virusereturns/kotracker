@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Avg
+from django.db.models import Avg, Min
 from datetime import timedelta
 
 
@@ -66,6 +66,9 @@ class Racer(models.Model):
 
     def get_average_time(self):
         return RacerRound.objects.filter(racer=self, time__isnull=False).aggregate(Avg('time'))['time__avg']
+
+    def get_best_time(self):
+        return RacerRound.objects.filter(racer=self, time__isnull=False).aggregate(Min('time'))['time__min']
 
     def knockout_finish(self):
         count = self.tournament.racer_set.count()
