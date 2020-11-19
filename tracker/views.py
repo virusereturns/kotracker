@@ -104,11 +104,19 @@ def process_round(request, tournament_id):
         previous_round = Round.objects.get(number=current_round_number - 1, tournament=tournament)
     except Exception:
         previous_round = Round.objects.get(number=current_round_number, tournament=tournament)
+
     racer_rounds = RacerRound.objects.filter(
-        racer__tournament=tournament, round_number=previous_round, racer__eliminated=False,
-        racer__dropped=False).order_by('time')
+        racer__tournament=tournament,
+        round_number=previous_round,
+        racer__eliminated=False,
+        racer__dropped=False
+    ).order_by('time')
+
     eliminated_racers = Racer.objects.filter(
-        Q(eliminated=True) | Q(dropped=True), tournament=tournament).order_by('-elimination_round')
+        Q(eliminated=True) | Q(dropped=True),
+        tournament=tournament
+    ).order_by('-elimination_round')
+
     eliminated_racers_list = []
     for index, racer in enumerate(eliminated_racers, start=1):
         racer.position_for_table = index + racer_rounds.count()
@@ -125,20 +133,23 @@ def process_round(request, tournament_id):
                 continue
             elif ": " in line:
                 # line with finished runners
-                finished_runner_name = re.search(r'(?<=\: ).+', line).group(0)[:-4]
+                finished_runner_name = re.search(r'(?<=\: ).+', line).group(0)
                 finished_runner_time = multiline_bot_output[index + 1]
             elif line == 'DNF':
                 # Runner that did not finish
-                finished_runner_name = multiline_bot_output[index - 1][:-4]
+                finished_runner_name = multiline_bot_output[index - 1]
                 finished_runner_time = 'dnf'
             else:
                 continue
             try:
                 racer_round = RacerRound.objects.get(
-                    racer__tournament=tournament, racer__name=finished_runner_name, round_number=current_round)
+                    racer__tournament=tournament,
+                    racer__discord_username=finished_runner_name,
+                    round_number=current_round
+                )
             except Exception:
-                print("I passed")
                 continue
+
             racer = racer_round.racer
             if finished_runner_time == 'dnf':
                 racer_round.eliminated = True
@@ -155,7 +166,11 @@ def process_round(request, tournament_id):
             racer_round.save()
         # We will search for unfinished runners and eliminate them if necessary
         unfinished_runners = RacerRound.objects.filter(
-            racer__tournament=tournament, round_number=current_round, time__isnull=True)
+            racer__tournament=tournament,
+            round_number=current_round,
+            time__isnull=True
+        )
+
         for racer_round in unfinished_runners:
             unfinished_count += 1
             racer_round.eliminated = True
@@ -168,8 +183,11 @@ def process_round(request, tournament_id):
         if unfinished_count < eliminated_racers:
             have_to_eliminate = eliminated_racers - unfinished_count
             not_yet_eliminated_racers = list(RacerRound.objects.filter(
-                racer__tournament=tournament, round_number=current_round,
-                time__isnull=False, racer__eliminated=False).order_by('-time'))[:have_to_eliminate]
+                racer__tournament=tournament,
+                round_number=current_round,
+                time__isnull=False,
+                racer__eliminated=False
+            ).order_by('-time'))[:have_to_eliminate]
             for racer_round in not_yet_eliminated_racers:
                 print(racer_round.racer)
                 racer_round.eliminated = True
@@ -180,6 +198,20 @@ def process_round(request, tournament_id):
                 racer.save()
 
         create_next_round_lite(tournament.id)
+
+        # After this has finished, we'll iterate through every finished runner so we can register their position
+        position = 0
+        finished_runners = RacerRound.objects.filter(
+            racer__tournament=tournament,
+            round_number=current_round,
+            racer__eliminated=False,
+            racer__dropped=False
+        ).order_by('time')
+
+        for racer_round in finished_runners:
+            position = position + 1
+            racer_round.position_in_round = position
+            racer_round.save()
 
         return HttpResponseRedirect(reverse('process_round', args=[tournament.id]))
 

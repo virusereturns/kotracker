@@ -56,6 +56,7 @@ class Racer(models.Model):
     """
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
     name = models.CharField(max_length=150)
+    discord_username = models.CharField(max_length=150, null=True, blank=True)
     pb = models.DurationField(null=True, blank=True)
     eliminated = models.BooleanField(default=False)
     elimination_round = models.PositiveSmallIntegerField(null=True, blank=True)

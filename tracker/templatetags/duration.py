@@ -10,7 +10,8 @@ def duration(td):
         return ''
     minutes, seconds = divmod(td.seconds + td.days * 86400, 60)
     hours, minutes = divmod(minutes, 60)
+    microseconds = str(td.microseconds)[0]
     if hours < 1:
-        return '{:02d}:{:02d}'.format(minutes, seconds)
+        return '{:02d}:{:02d}.{}'.format(minutes, seconds, microseconds)
     else:
-        return '{:1d}:{:02d}:{:02d}'.format(hours, minutes, seconds)
+        return '{}:{:02d}:{:02d}.{}'.format(hours, minutes, seconds, microseconds)
