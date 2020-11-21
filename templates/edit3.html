@@ -5,9 +5,8 @@
     <h2>GETTING DATA FOR ROUND {{tournament.current_round}} ON {{tournament.name}}</h2>
     <form method="post">
         {% csrf_token %}
-        <label for="id_text_input">Input bot output</label><br>
-        <textarea name="bot_output" id="id_text_input" rows="10" cols="80" required></textarea><br><br>
-        <label for="id_eliminated_players">Eliminated racers amount</label><br>
+        <p>Data will be automatically grabbed from the racebot. Currently there are {{tournament.racers_left}}/{{tournament.racers_count}} racers left.<p>
+        <label for="id_eliminated_players">Amount of racers to eliminate: </label>
         <input type="number" name="eliminated_racers" id="id_eliminated_racers" required/><br><br>
         <input type="submit" value="Save and go to next round">
     </form>

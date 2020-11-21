@@ -1,4 +1,5 @@
-import re
+import pandas
+from django.conf import settings
 from django.shortcuts import render, get_object_or_404, reverse
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -26,6 +27,9 @@ def view_last_round(request, tournament_id):
 
 @login_required
 def edit_round(request, tournament, number):
+    """
+    In the case you manually want to add the rounds.
+    """
     tournament_object = get_object_or_404(Tournament, pk=tournament)
     round_object = get_object_or_404(Round, tournament=tournament, number=number)
     racer_rounds = RacerRound.objects.filter(
@@ -96,78 +100,77 @@ def edit_round(request, tournament, number):
 
 
 @login_required
-def process_round(request, tournament_id):
+def process(request, tournament_id):
+    """
+    Process a csv into a Pandas DataFrame from an URL. Soon you'll be able to also post a file with that csv.
+    """
     tournament = get_object_or_404(Tournament, pk=tournament_id)
     current_round_number = tournament.current_round()
-    current_round = Round.objects.get(number=current_round_number, tournament=tournament)
+
     try:
         previous_round = Round.objects.get(number=current_round_number - 1, tournament=tournament)
+        racer_rounds = RacerRound.objects.filter(
+            racer__tournament=tournament,
+            round_number=previous_round,
+            racer__eliminated=False,
+            racer__dropped=False
+        ).order_by('time')
+
+        eliminated_racers = Racer.objects.filter(
+            Q(eliminated=True) | Q(dropped=True),
+            tournament=tournament
+        ).order_by('-elimination_round')
+
+        eliminated_racers_list = []
+        for index, racer in enumerate(eliminated_racers, start=1):
+            racer.position_for_table = index + racer_rounds.count()
+            eliminated_racers_list.append(racer)
+    except Round.DoesNotExist:
+        # This means this is round 1
+        racer_rounds, eliminated_racers_list = None, None
     except Exception:
         previous_round = Round.objects.get(number=current_round_number, tournament=tournament)
 
-    racer_rounds = RacerRound.objects.filter(
-        racer__tournament=tournament,
-        round_number=previous_round,
-        racer__eliminated=False,
-        racer__dropped=False
-    ).order_by('time')
-
-    eliminated_racers = Racer.objects.filter(
-        Q(eliminated=True) | Q(dropped=True),
-        tournament=tournament
-    ).order_by('-elimination_round')
-
-    eliminated_racers_list = []
-    for index, racer in enumerate(eliminated_racers, start=1):
-        racer.position_for_table = index + racer_rounds.count()
-        eliminated_racers_list.append(racer)
-
     if request.POST:
-        bot_output = request.POST.get('bot_output')
+        new_round = create_next_round_lite(tournament)
+        df = pandas.read_csv(settings.RACE_CSV_URL, header=None, names=['username', 'time'])
         eliminated_racers = int(request.POST.get('eliminated_racers'))
-        multiline_bot_output = bot_output.splitlines()
         unfinished_count = 0
-        for index, line in enumerate(multiline_bot_output):
-            if line.startswith('Race') or line.startswith('Finalized'):
-                # Header lines, just ignore them
-                continue
-            elif ": " in line:
-                # line with finished runners
-                finished_runner_name = re.search(r'(?<=\: ).+', line).group(0)
-                finished_runner_time = multiline_bot_output[index + 1]
-            elif line == 'DNF':
-                # Runner that did not finish
-                finished_runner_name = multiline_bot_output[index - 1]
-                finished_runner_time = 'dnf'
-            else:
-                continue
+        for row in df.itertuples(index=False, name='Rr'):
+            # Get the data from the row
+            username = getattr(row, 'username')
+            time = getattr(row, 'time')
+
             try:
                 racer_round = RacerRound.objects.get(
                     racer__tournament=tournament,
-                    racer__discord_username=finished_runner_name,
-                    round_number=current_round
+                    racer__discord_username=username,
+                    round_number=new_round
                 )
             except Exception:
                 continue
 
             racer = racer_round.racer
-            if finished_runner_time == 'dnf':
+            if time.lower() == 'dnf':
                 racer_round.eliminated = True
                 racer_round.dnf = True
                 racer.eliminated = True
-                racer.elimination_round = current_round_number
+                racer.elimination_round = new_round.number
             else:
-                racer_round.time = finished_runner_time
+                racer_round.time = time
+
             if racer_round.time:
                 racer_round.save()
-                # Reload this object from BD
+                # Reload this object from BD. TODO: Explain why because I don't remember.
                 racer_round = RacerRound.objects.get(pk=racer_round.id)
+
             racer.save()
             racer_round.save()
+
         # We will search for unfinished runners and eliminate them if necessary
         unfinished_runners = RacerRound.objects.filter(
             racer__tournament=tournament,
-            round_number=current_round,
+            round_number=new_round,
             time__isnull=True
         )
 
@@ -178,32 +181,32 @@ def process_round(request, tournament_id):
             racer_round.save()
             racer = racer_round.racer
             racer.eliminated = True
-            racer.elimination_round = current_round_number
+            racer.elimination_round = new_round.number
             racer.save()
+
         if unfinished_count < eliminated_racers:
+            # If it's not enought with the unfinished runners, which is probably the most common case, we'll eliminate
+            # runners based on their time
             have_to_eliminate = eliminated_racers - unfinished_count
             not_yet_eliminated_racers = list(RacerRound.objects.filter(
                 racer__tournament=tournament,
-                round_number=current_round,
+                round_number=new_round,
                 time__isnull=False,
                 racer__eliminated=False
             ).order_by('-time'))[:have_to_eliminate]
             for racer_round in not_yet_eliminated_racers:
-                print(racer_round.racer)
                 racer_round.eliminated = True
                 racer_round.save()
                 racer = racer_round.racer
                 racer.eliminated = True
-                racer.elimination_round = current_round_number
+                racer.elimination_round = new_round.number
                 racer.save()
-
-        create_next_round_lite(tournament.id)
 
         # After this has finished, we'll iterate through every finished runner so we can register their position
         position = 0
         finished_runners = RacerRound.objects.filter(
             racer__tournament=tournament,
-            round_number=current_round,
+            round_number=new_round,
             racer__eliminated=False,
             racer__dropped=False
         ).order_by('time')
@@ -213,9 +216,9 @@ def process_round(request, tournament_id):
             racer_round.position_in_round = position
             racer_round.save()
 
-        return HttpResponseRedirect(reverse('process_round', args=[tournament.id]))
+        return HttpResponseRedirect(reverse('process', args=[tournament.id]))
 
-    return render(request, 'edit2.html', {
+    return render(request, 'edit3.html', {
         'racer_rounds': racer_rounds,
         'current_round': current_round_number,
         'previous_round': current_round_number - 1,
@@ -246,31 +249,17 @@ def overview_pb_mode(request, tournament):
         'racers': racers, 'tournament': tournament_object})
 
 
-@login_required
-def create_next_round(request, tournament):
-    tournament = get_object_or_404(Tournament, pk=tournament)
+def create_next_round_lite(tournament):
     try:
         last_round = Round.objects.filter(tournament=tournament).latest('id').number
+        round = Round.objects.create(tournament=tournament, number=last_round + 1)
     except Round.DoesNotExist:
-        last_round = 0
-    # First we create the next round
-    round = Round.objects.create(tournament=tournament, number=last_round + 1)
-    # Then we move on to add all the racers to the round
-    for racer in Racer.objects.filter(tournament=tournament):
-        RacerRound.objects.create(
-            racer=racer,
-            round_number=round)
-    return HttpResponseRedirect(reverse(
-        'process_round', kwargs={'tournament_id': tournament.id}))
-
-
-def create_next_round_lite(tournament_id):
-    tournament = get_object_or_404(Tournament, pk=tournament_id)
-    last_round = Round.objects.filter(tournament=tournament).latest('id').number
-    round = Round.objects.create(tournament=tournament, number=last_round + 1)
+        # This means the first round does not exist, why not create it.
+        round = Round.objects.create(tournament=tournament, number=1)
     # Then we move on to add all the racers to the round
     for racer in Racer.objects.filter(tournament=tournament, eliminated=False, dropped=False):
         RacerRound.objects.create(racer=racer, round_number=round)
+    return round
 
 
 @login_required

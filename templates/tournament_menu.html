@@ -14,17 +14,11 @@
             <td>{{tournament.date|default_if_none:"-"}}</td>
             <td>{{tournament.current_round}}</td>
             <td>
-                {% if tournament.current_round == 0 %}
-                    <a href="/create_next_round/{{tournament.id}}/" target='_blank'><button class='menu-button'>Create FIRST round</button></a>
-                {% else %}
-                    <a href="/process_round/{{tournament.id}}/" target='_blank'><button class='menu-button'>Process round {{tournament.current_round}}</button></a>
-                {% endif %}
-                    <a href="/overview/{{tournament.id}}" target='_blank'><button class='menu-button' target='_blank'>OBS Overview + PB</button></a>
-                {% if tournament.current_round > 0 %}
-                    <a href="/overview_with_details/{{tournament.id}}" target='_blank'><button class='menu-button'>OBS Overview + Best &amp; Avg.</button></a>
-                    <a href="/view_last_round/{{tournament.id}}/" target='_blank'><button class='menu-button'>OBS LAST ROUND</button></a>
-                    <a href="/overview_pb_mode/{{tournament.id}}/" target='_blank'><button class='menu-button'>OBS LAST ROUND (PB MODE)</button></a>
-                {% endif %}
+                <a href="{% url 'process' tournament.id %}" target='_blank'><button class='menu-button'>Process round {{tournament.current_round}}</button></a>
+                <a href="/overview/{{tournament.id}}" target='_blank'><button class='menu-button' target='_blank'>OBS Overview + PB</button></a>
+                <a href="/overview_with_details/{{tournament.id}}" target='_blank'><button class='menu-button'>OBS Overview + Best &amp; Avg.</button></a>
+                <a href="/view_last_round/{{tournament.id}}/" target='_blank'><button class='menu-button'>OBS LAST ROUND</button></a>
+                <a href="/overview_pb_mode/{{tournament.id}}/" target='_blank'><button class='menu-button'>OBS LAST ROUND (PB MODE)</button></a>
                 <a href="/rockyirs/tracker/tournament/{{tournament.id}}" target='_blank'><button class='menu-button'>Edit in admin</button></a>
 
             </td>

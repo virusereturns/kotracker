@@ -47,7 +47,14 @@ class Tournament(models.Model):
         ordering = ['date']
 
     def current_round(self):
-        return self.round_set.count()
+        # The amount of rounds already finished, plus one which is the current one.
+        return self.round_set.count() + 1
+
+    def racers_left(self):
+        return self.racer_set.filter(eliminated=False).count()
+
+    def racers_count(self):
+        return self.racer_set.count()
 
 
 class Racer(models.Model):

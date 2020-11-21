@@ -141,6 +141,7 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'kotracker/static')]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+RACE_CSV_URL = 'https://stream.rgltv.com/rbLastRace'
 
 try:
     from .local_settings import *  # noqa

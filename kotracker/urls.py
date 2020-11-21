@@ -26,7 +26,6 @@ urlpatterns = [
     path('tournament_details/<tournament>/', tournament_details, name='tournament_details'),
     path('view_last_round/<tournament_id>/', view_last_round, name='view_last_round'),
     path('edit_round/<tournament>/<number>/', edit_round, name='edit_round'),
-    path('create_next_round/<tournament>/', create_next_round, name='create_next_round'),
     path('revive_racer/<racer_id>/', revive_racer, name='revive_racer'),
-    path('process_round/<tournament_id>/', process_round, name='process_round')
+    path('process/<tournament_id>/', process, name='process')
 ]
