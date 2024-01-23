@@ -26,4 +26,4 @@ If any corrections need to be done to the tournament (un-eliminate, un-drop race
 
 # Special thanks
 
-baldnate for the CSS styles
+wintery-mix for the CSS styles
